@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoGrid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="canvas-container"></div>
+  
+  <div id="controls">
+    <h1>GeoGrid</h1>
+    
+    <div class="control-group">
+      <label for="gridSize">Grid Size: <span id="gridSizeValue">10</span></label>
+      <input type="range" id="gridSize" min="2" max="60" value="10">
+    </div>
+    
+    <div class="control-group">
+      <label for="theme">Color Theme</label>
+      <select id="theme">
+        <option value="olive">Olive</option>
+        <option value="fieryOcean">Fiery Ocean</option>
+        <option value="freshSummer">Fresh Summer</option>
+        <option value="pastelSweets">Pastel Sweets</option>
+        <option value="autumnGlow">Autumn Glow</option>
+        <option value="beachDay">Beach Day</option>
+      </select>
+    </div>
+    
+    <div class="control-group">
+      <label for="bgColor">Background</label>
+      <input type="color" id="bgColor" value="#0a0a0f">
+    </div>
+    
+    <div class="control-group">
+      <label for="complexity">Pattern Complexity: <span id="complexityValue">2</span></label>
+      <input type="range" id="complexity" min="1" max="5" value="2">
+    </div>
+    
+    <div class="control-group checkbox-group">
+      <input type="checkbox" id="showGrid" checked>
+      <label for="showGrid">Show Grid Lines</label>
+    </div>
+    
+    <div class="control-group hash-group">
+      <label>Seed Hash</label>
+      <div class="hash-input-wrapper">
+        <input type="text" id="seedHash" readonly>
+        <button id="copyHash" title="Copy hash">⎘</button>
+      </div>
+    </div>
+    
+    <div class="control-group">
+      <label for="loadHash">Load from Hash</label>
+      <div class="hash-input-wrapper">
+        <input type="text" id="loadHash" placeholder="Paste hash here...">
+        <button id="loadBtn" title="Load">→</button>
+      </div>
+    </div>
+    
+    <button id="generate">Generate New ↻</button>
+    <button id="save">Save PNG ↓</button>
+  </div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <script src="sketch.js"></script>
+</body>
+</html>
