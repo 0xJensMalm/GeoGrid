@@ -6,11 +6,18 @@
   <title>GeoGrid</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="canvas-container"></div>
+  <div id="artwork-wrapper">
+    <div id="canvas-container"></div>
+    <div id="signature">
+      <span class="sig-title">GeoGrid</span>
+      <span class="sig-hash" id="sigHash"></span>
+      <div class="sig-colors" id="sigColors"></div>
+    </div>
+  </div>
   
   <div id="controls">
     <h1>GeoGrid</h1>

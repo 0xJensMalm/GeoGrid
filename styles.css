@@ -14,10 +14,54 @@ body {
   overflow: hidden;
 }
 
+#artwork-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 #canvas-container {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Signature styling */
+#signature {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0;
+  margin-top: 24px;
+}
+
+.sig-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.12em;
+}
+
+.sig-hash {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.12em;
+}
+
+.sig-colors {
+  display: flex;
+  gap: 5px;
+}
+
+.sig-color-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 1px;
 }
 
 #controls {

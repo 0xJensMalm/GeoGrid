@@ -17,13 +17,16 @@ const themes = {
   freshSummer: ['#8ecae6', '#219ebc', '#023047', '#ffb703', '#fb8500'],
   pastelSweets: ['#f6bd60', '#f7ede2', '#f5cac3', '#84a59d', '#f28482'],
   autumnGlow: ['#003049', '#d62828', '#f77f00', '#fcbf49', '#eae2b7'],
-  beachDay: ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51']
+  freshSummer: ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51'],
+  colorFeeling: ['#ffbe0b', '#fb5607', '#ff006e', '#8338ec', '#3a86ff']
 };
 
 function setup() {
   seed = Math.floor(Math.random() * 999999999);
   
-  const canvas = createCanvas(windowWidth, windowHeight);
+  // Canvas takes up 70% of viewport height, square aspect ratio
+  const canvasSize = Math.floor(windowHeight * 0.70);
+  const canvas = createCanvas(canvasSize, canvasSize);
   canvas.parent('canvas-container');
   
   noLoop();
@@ -35,16 +38,8 @@ function setup() {
 function draw() {
   background(bgColor);
   
-  // Calculate cell size based on grid
-  const canvasSize = min(width, height) * 0.85;
-  const cellSize = canvasSize / gridSize;
-  
-  // Center the grid
-  const offsetX = (width - canvasSize) / 2;
-  const offsetY = (height - canvasSize) / 2;
-  
-  push();
-  translate(offsetX, offsetY);
+  // Calculate cell size - canvas is already sized, fill it completely
+  const cellSize = width / gridSize;
   
   // Draw all cells with the same pattern
   const colors = themes[currentTheme];
@@ -64,14 +59,15 @@ function draw() {
     strokeWeight(0.5);
     noFill();
     for (let row = 0; row <= gridSize; row++) {
-      line(0, row * cellSize, canvasSize, row * cellSize);
+      line(0, row * cellSize, width, row * cellSize);
     }
     for (let col = 0; col <= gridSize; col++) {
-      line(col * cellSize, 0, col * cellSize, canvasSize);
+      line(col * cellSize, 0, col * cellSize, height);
     }
   }
   
-  pop();
+  // Update signature
+  updateSignature();
 }
 
 // Generate hash from current state
@@ -108,6 +104,27 @@ function updateHashDisplay() {
   const hashInput = document.getElementById('seedHash');
   if (hashInput) {
     hashInput.value = generateHash();
+  }
+}
+
+// Update signature display
+function updateSignature() {
+  const sigHash = document.getElementById('sigHash');
+  const sigColors = document.getElementById('sigColors');
+  
+  if (sigHash) {
+    sigHash.textContent = generateHash();
+  }
+  
+  if (sigColors) {
+    const colors = themes[currentTheme];
+    sigColors.innerHTML = '';
+    for (const color of colors) {
+      const swatch = document.createElement('div');
+      swatch.className = 'sig-color-swatch';
+      swatch.style.backgroundColor = color;
+      sigColors.appendChild(swatch);
+    }
   }
 }
 
@@ -290,7 +307,8 @@ function setupControls() {
 
 // Handle window resize
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  const canvasSize = Math.floor(windowHeight * 0.70);
+  resizeCanvas(canvasSize, canvasSize);
   redraw();
 }
 
