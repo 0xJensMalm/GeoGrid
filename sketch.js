@@ -46,6 +46,13 @@ function draw() {
   // Frame background (outside canvas)
   document.body.style.backgroundColor = bgColor;
 
+  // Signature color: white-ish on black, black-ish on any other background
+  const signature = document.getElementById('signature');
+  if (signature) {
+    const isBlack = (bgColor || '').toLowerCase() === '#000000';
+    signature.style.setProperty('--sig-color', isBlack ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.55)');
+  }
+
   // Compute square cell size that fits BOTH axes
   const cellSize = Math.min(width / gridCols, height / gridRows);
 
@@ -537,4 +544,8 @@ function exportHighRes(resWidth, resHeight) {
 // ---------- Utils ----------
 function clampInt(v, lo, hi) {
   return Math.max(lo, Math.min(hi, Math.floor(v)));
+}
+
+function isBlackHex(hex) {
+  return (hex || '').toLowerCase() === '#000000';
 }

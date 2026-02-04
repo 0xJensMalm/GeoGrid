@@ -1,3 +1,15 @@
+:root {
+  --ui-radius: 6px;
+  --ui-radius-sm: 4px;
+  --ui-gap: 14px;
+  --ui-border: rgba(255, 255, 255, 0.14);
+  --ui-border-strong: rgba(255, 255, 255, 0.22);
+  --ui-bg: rgba(15, 15, 25, 0.96);
+
+  /* Signature color is controlled from JS via: --sig-color */
+  --sig-color: rgba(255, 255, 255, 0.35);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -35,21 +47,15 @@ body {
   width: 100%;
   padding: 0;
   margin-top: 24px;
+  color: var(--sig-color);
 }
 
-.sig-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.1rem;
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.35);
-  letter-spacing: 0.12em;
-}
-
+.sig-title,
 .sig-hash {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.1rem;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.35);
+  color: inherit;
   letter-spacing: 0.12em;
 }
 
@@ -62,54 +68,57 @@ body {
   width: 12px;
   height: 12px;
   border-radius: 1px;
+  border: 1px solid rgba(0, 0, 0, 0.55); /* thin black border */
 }
 
 #controls {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: rgba(15, 15, 25, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 24px;
-  min-width: 240px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  width: 260px; /* consistent alignment */
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  padding: 18px;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
 }
 
 #controls h1 {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 500;
-  color: #fff;
-  margin-bottom: 20px;
-  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: 14px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  padding-bottom: 10px;
 }
 
 .control-group {
-  margin-bottom: 16px;
+  margin-bottom: var(--ui-gap);
 }
 
 .control-group label {
-  display: block;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.62);
   margin-bottom: 8px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .control-group label span {
-  color: #fff;
+  color: rgba(255, 255, 255, 0.92);
   font-weight: 500;
 }
 
 input[type="range"] {
   width: 100%;
   height: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 0; /* harder look */
   outline: none;
   -webkit-appearance: none;
   cursor: pointer;
@@ -117,97 +126,53 @@ input[type="range"] {
 
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   background: #fff;
-  border-radius: 50%;
+  border-radius: 2px; /* square-ish */
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform 0.12s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 select {
   width: 100%;
-  padding: 10px 12px;
+  height: 36px;
+  padding: 0 10px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  color: #fff;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
+  color: rgba(255, 255, 255, 0.92);
   font-family: inherit;
   font-size: 0.8rem;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 select:hover,
 select:focus {
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: var(--ui-border-strong);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 select option {
-  background: #1a1a2e;
+  background: #101022;
   color: #fff;
 }
 
+/* (kept for safety even if not used anymore) */
 input[type="color"] {
   width: 100%;
   height: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
   background: transparent;
   cursor: pointer;
   padding: 2px;
-}
-
-input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-
-input[type="color"]::-webkit-color-swatch {
-  border: none;
-  border-radius: 4px;
-}
-
-/* Aspect ratio selector */
-.aspect-ratio-selector {
-  display: flex;
-  gap: 8px;
-}
-
-.aspect-btn {
-  flex: 1;
-  padding: 10px;
-  margin-top: 0;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.4);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.aspect-btn svg {
-  width: 24px;
-  height: 24px;
-}
-
-.aspect-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.aspect-btn.active {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 0.9);
 }
 
 .checkbox-group {
@@ -230,37 +195,38 @@ input[type="checkbox"] {
 
 button {
   width: 100%;
-  padding: 12px 16px;
+  height: 38px;
+  padding: 0 12px;
   margin-top: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
+  color: rgba(255, 255, 255, 0.92);
   font-family: inherit;
   font-size: 0.8rem;
   font-weight: 500;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 button:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--ui-border-strong);
 }
 
 button#generate {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.10);
 }
 
 button#generate:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 /* Hash input styling */
 .hash-group input[type="text"] {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   letter-spacing: 0.05em;
 }
 
@@ -271,31 +237,35 @@ button#generate:hover {
 
 .hash-input-wrapper input[type="text"] {
   flex: 1;
-  padding: 10px 12px;
+  height: 36px;
+  padding: 0 10px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  color: #fff;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
+  color: rgba(255, 255, 255, 0.92);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .hash-input-wrapper input[type="text"]:focus {
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: var(--ui-border-strong);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .hash-input-wrapper input[type="text"]::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.30);
 }
 
 .hash-input-wrapper button {
-  width: 40px;
-  min-width: 40px;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
   margin-top: 0;
-  padding: 8px;
+  padding: 0;
   font-size: 1rem;
+  border-radius: var(--ui-radius-sm);
 }
 
 /* Save section styling */
@@ -313,10 +283,10 @@ button#generate:hover {
 
 #save-options label {
   display: block;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.62);
   margin-bottom: 8px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .resolution-wrapper {
@@ -326,16 +296,17 @@ button#generate:hover {
 }
 
 .resolution-wrapper input[type="number"] {
-  width: 70px;
-  padding: 10px 8px;
+  width: 74px;
+  height: 36px;
+  padding: 0 8px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  color: #fff;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
+  color: rgba(255, 255, 255, 0.92);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
   -moz-appearance: textfield;
   text-align: center;
 }
@@ -347,11 +318,12 @@ button#generate:hover {
 }
 
 .resolution-wrapper input[type="number"]:focus {
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: var(--ui-border-strong);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .res-separator {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.45);
   font-size: 0.9rem;
   padding: 0 2px;
 }
@@ -359,55 +331,58 @@ button#generate:hover {
 .resolution-wrapper button {
   width: 36px;
   min-width: 36px;
+  height: 36px;
   margin-top: 0;
-  padding: 8px;
+  padding: 0;
   font-size: 0.9rem;
 }
 
 #confirmSave {
-  background: rgba(100, 200, 100, 0.2);
-  border-color: rgba(100, 200, 100, 0.3);
+  background: rgba(100, 200, 100, 0.18);
+  border-color: rgba(100, 200, 100, 0.28);
 }
 
 #confirmSave:hover {
-  background: rgba(100, 200, 100, 0.3);
+  background: rgba(100, 200, 100, 0.26);
 }
 
 #cancelSave {
-  background: rgba(200, 100, 100, 0.15);
-  border-color: rgba(200, 100, 100, 0.25);
+  background: rgba(200, 100, 100, 0.14);
+  border-color: rgba(200, 100, 100, 0.22);
 }
 
 #cancelSave:hover {
-  background: rgba(200, 100, 100, 0.25);
+  background: rgba(200, 100, 100, 0.22);
 }
 
 #save-section #save.hidden {
   display: none;
 }
 
+/* Background swatches */
 .bg-swatches {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
-  margin-top: 8px;
+  margin-top: 0;
 }
 
 .bg-swatch {
   width: 14px;
   height: 14px;
-  border-radius: 3px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   cursor: pointer;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .bg-swatch:hover {
   opacity: 1;
-  border-color: rgba(255,255,255,0.25);
+  border-color: rgba(255, 255, 255, 0.30);
 }
 
 .bg-swatch.active {
-  outline: 2px solid rgba(255,255,255,0.35);
+  outline: 2px solid rgba(255, 255, 255, 0.35);
   outline-offset: 1px;
   opacity: 1;
 }
@@ -419,11 +394,12 @@ button#generate:hover {
     bottom: 0;
     right: 0;
     left: 0;
-    border-radius: 12px 12px 0 0;
+    width: auto;
+    border-radius: var(--ui-radius) var(--ui-radius) 0 0;
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    padding: 16px;
+    padding: 14px;
     min-width: unset;
   }
 
@@ -435,12 +411,12 @@ button#generate:hover {
 
   .control-group {
     flex: 1;
-    min-width: 120px;
+    min-width: 130px;
     margin-bottom: 0;
   }
 
   button {
     flex: 1;
-    min-width: 100px;
+    min-width: 120px;
   }
 }

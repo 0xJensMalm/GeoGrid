@@ -33,7 +33,7 @@ window.THEME_LIST = [
     {
       id: 'francoPhile',
       name: 'francophile',
-      colors: ['#0d1b2a', '#1b263b', '#415a77', '#778da9', '#e0e1dd'],
+      colors: ['#0d1b2a', '#1b263b', '#415a77', '#E63946', '#e0e1dd'],
     },
 
   ];
