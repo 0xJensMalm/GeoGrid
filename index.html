@@ -18,42 +18,44 @@
       <div class="sig-colors" id="sigColors"></div>
     </div>
   </div>
-  
+
   <div id="controls">
     <h1>GeoGrid</h1>
-    
+
+    <div class="control-group">
+      <label>Background</label>
+      <div class="bg-swatches" id="bgSwatches"></div>
+    </div>
+
+    <div class="control-group">
+      <label for="aspect">Aspect Ratio</label>
+      <select id="aspect">
+        <option value="square">Square (1:1)</option>
+        <option value="landscape">Landscape (3:2)</option>
+        <option value="portrait">Portrait (2:3)</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="theme">Color Theme</label>
+      <select id="theme"></select>
+    </div>
+
     <div class="control-group">
       <label for="gridSize">Grid Size: <span id="gridSizeValue">10</span></label>
       <input type="range" id="gridSize" min="2" max="60" value="10">
     </div>
-    
-    <div class="control-group">
-      <label for="theme">Color Theme</label>
-      <select id="theme">
-        <option value="olive">Olive</option>
-        <option value="fieryOcean">Fiery Ocean</option>
-        <option value="freshSummer">Fresh Summer</option>
-        <option value="pastelSweets">Pastel Sweets</option>
-        <option value="autumnGlow">Autumn Glow</option>
-        <option value="beachDay">Beach Day</option>
-      </select>
-    </div>
-    
-    <div class="control-group">
-      <label for="bgColor">Background</label>
-      <input type="color" id="bgColor" value="#0a0a0f">
-    </div>
-    
+
     <div class="control-group">
       <label for="complexity">Pattern Complexity: <span id="complexityValue">2</span></label>
       <input type="range" id="complexity" min="1" max="5" value="2">
     </div>
-    
+
     <div class="control-group checkbox-group">
       <input type="checkbox" id="showGrid" checked>
       <label for="showGrid">Show Grid Lines</label>
     </div>
-    
+
     <div class="control-group hash-group">
       <label>Seed Hash</label>
       <div class="hash-input-wrapper">
@@ -61,7 +63,7 @@
         <button id="copyHash" title="Copy hash">⎘</button>
       </div>
     </div>
-    
+
     <div class="control-group">
       <label for="loadHash">Load from Hash</label>
       <div class="hash-input-wrapper">
@@ -69,12 +71,26 @@
         <button id="loadBtn" title="Load">→</button>
       </div>
     </div>
-    
+
     <button id="generate">Generate New ↻</button>
-    <button id="save">Save PNG ↓</button>
+
+    <div id="save-section">
+      <button id="save">Download</button>
+      <div id="save-options" class="hidden">
+        <label>Resolution (width × height)</label>
+        <div class="resolution-wrapper">
+          <input type="number" id="resWidth" value="2048" min="256" max="8192" step="1" placeholder="Width">
+          <span class="res-separator">×</span>
+          <input type="number" id="resHeight" value="2048" min="256" max="8192" step="1" placeholder="Height">
+          <button id="confirmSave" title="Export">✓</button>
+          <button id="cancelSave" title="Cancel">✕</button>
+        </div>
+      </div>
+    </div>
   </div>
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <script src="themes.js"></script>
   <script src="sketch.js"></script>
 </body>
 </html>
