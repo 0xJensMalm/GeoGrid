@@ -31,6 +31,9 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  /* frame padding around canvas+signature */
+  padding: 40px 56px;
 }
 
 #canvas-container {
@@ -41,13 +44,19 @@ body {
 
 /* Signature styling */
 #signature {
+  margin-top: 32px;
+  width: fit-content;         /* key: don’t stretch to wrapper width */
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  padding: 0;
-  margin-top: 24px;
+  gap: 28px;                  /* stable spacing */
   color: var(--sig-color);
+}
+
+/* Keep hash from exploding the layout */
+.sig-hash {
+  white-space: nowrap;
 }
 
 .sig-title,

@@ -20,12 +20,16 @@ let bgColor = '#000000'; // default black
 let gridCols = 10;
 let gridRows = 10;
 
+// Keep a handle to the real canvas DOM element for layout calculations
+let canvasEl = null;
+
 function setup() {
   seed = Math.floor(Math.random() * 999999999);
 
   const { w, h } = getCanvasSizeForAspect();
   const canvas = createCanvas(w, h);
   canvas.parent('canvas-container');
+  canvasEl = canvas.elt;
 
   noLoop();
 
@@ -46,12 +50,8 @@ function draw() {
   // Frame background (outside canvas)
   document.body.style.backgroundColor = bgColor;
 
-  // Signature color: white-ish on black, black-ish on any other background
-  const signature = document.getElementById('signature');
-  if (signature) {
-    const isBlack = (bgColor || '').toLowerCase() === '#000000';
-    signature.style.setProperty('--sig-color', isBlack ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.55)');
-  }
+  // Signature color: subtle light on black bg; real black on non-black bg
+  applySignatureColorForBg();
 
   // Compute square cell size that fits BOTH axes
   const cellSize = Math.min(width / gridCols, height / gridRows);
@@ -89,6 +89,9 @@ function draw() {
   }
 
   updateSignature();
+
+  // After signature content exists, align + position it
+  syncSignatureLayout();
 }
 
 // ---------- Themes ----------
@@ -110,6 +113,50 @@ function setThemeByIndex(idx) {
 function getBackgroundPalette() {
   // Black first + theme colors
   return ['#000000', ...getThemeColors()];
+}
+
+// ---------- Signature color ----------
+function applySignatureColorForBg() {
+  const signature = document.getElementById('signature');
+  if (!signature) return;
+
+  const isBlack = (bgColor || '').toLowerCase() === '#000000';
+
+  // Clear contrast:
+  // - black bg: subtle light
+  // - non-black bg: real black
+  const c = isBlack ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.88)';
+
+  signature.style.setProperty('--sig-color', c);
+  signature.style.color = c;
+}
+
+// Keep signature aligned to canvas width and halfway between canvas bottom and wrapper bottom
+function syncSignatureLayout() {
+  const wrapper = document.getElementById('artwork-wrapper');
+  const signature = document.getElementById('signature');
+  if (!wrapper || !signature || !canvasEl) return;
+
+  const wRect = wrapper.getBoundingClientRect();
+  const cRect = canvasEl.getBoundingClientRect();
+
+  // Align signature width to canvas width
+  const cw = Math.round(cRect.width);
+  signature.style.width = `${cw}px`;
+  signature.style.maxWidth = `${cw}px`;
+  signature.style.justifyContent = 'space-between';
+
+  // Place signature halfway between canvas bottom and wrapper bottom
+  const freeSpace = wRect.bottom - cRect.bottom;
+  const sigH = signature.getBoundingClientRect().height;
+
+  let mt = (freeSpace - sigH) / 2;
+  if (!isFinite(mt)) return;
+
+  // Clamp so it never collapses too tight
+  mt = Math.max(18, mt);
+
+  signature.style.marginTop = `${Math.round(mt)}px`;
 }
 
 // ---------- Aspect ratio / canvas sizing ----------
@@ -194,6 +241,7 @@ function parseHash(hash) {
     );
     bgColor = bgPalette[safeBgIndex];
 
+    applySignatureColorForBg();
     return true;
   } catch (e) {
     console.error('Invalid hash:', e);
@@ -306,7 +354,7 @@ function setupControls() {
     aspectMode = e.target.value;
     recalcGridDims();
     resizeToAspect();
-    refreshThemeUI(); // ensures bg palette is consistent
+    refreshThemeUI();
     updateHashDisplay();
     redraw();
   });
@@ -435,7 +483,9 @@ function setupControls() {
 function refreshThemeUI() {
   refreshBgSwatches();
   updateSignature();
+  applySignatureColorForBg();
   document.body.style.backgroundColor = bgColor;
+  syncSignatureLayout();
 }
 
 function refreshBgSwatches() {
@@ -454,6 +504,7 @@ function refreshBgSwatches() {
     div.addEventListener('click', () => {
       bgColor = c;
       document.body.style.backgroundColor = bgColor;
+      applySignatureColorForBg(); // immediate update
       updateHashDisplay();
       refreshBgSwatches();
       redraw();
@@ -492,53 +543,136 @@ function keyPressed() {
 }
 
 // ---------- Export ----------
-function exportHighRes(resWidth, resHeight) {
-  const pg = createGraphics(resWidth, resHeight);
+async function exportHighRes(resWidth, resHeight) {
+  const wrapper = document.getElementById('artwork-wrapper');
+  const canvasContainer = document.getElementById('canvas-container');
+  const signature = document.getElementById('signature');
 
-  const colors = getThemeColors();
-
-  // IMPORTANT: set the offscreen buffer background
-  pg.background(bgColor);
-
-  const cellSize = Math.min(resWidth / gridCols, resHeight / gridRows);
-  const gridW = cellSize * gridCols;
-  const gridH = cellSize * gridRows;
-  const offsetX = (resWidth - gridW) / 2;
-  const offsetY = (resHeight - gridH) / 2;
-
-  pg.push();
-  pg.translate(offsetX, offsetY);
-
-  for (let row = 0; row < gridRows; row++) {
-    for (let col = 0; col < gridCols; col++) {
-      pg.push();
-      pg.translate(col * cellSize, row * cellSize);
-
-      pg.noStroke();
-      for (const tri of pattern.triangles) {
-        pg.fill(colors[tri.colorIndex % colors.length]);
-        pg.beginShape();
-        for (const v of tri.vertices) pg.vertex(v.x * cellSize, v.y * cellSize);
-        pg.endShape(CLOSE);
-      }
-
-      pg.pop();
-    }
+  if (!wrapper || !canvasContainer || !signature || !window.html2canvas) {
+    console.error('Export failed: missing DOM nodes or html2canvas');
+    return;
   }
 
-  if (showGrid && Math.max(gridCols, gridRows) <= 40) {
-    pg.stroke(255, 15);
-    pg.strokeWeight(Math.min(resWidth, resHeight) / 1000);
-    pg.noFill();
+  // Save current inline styles so we can restore
+  const prevWrapperStyle = wrapper.getAttribute('style') || '';
+  const prevCanvasContainerStyle = canvasContainer.getAttribute('style') || '';
+  const prevSignatureStyle = signature.getAttribute('style') || '';
+  const prevBodyStyle = document.body.getAttribute('style') || '';
+  const prevHtmlStyle = document.documentElement.getAttribute('style') || '';
 
-    for (let r = 0; r <= gridRows; r++) pg.line(0, r * cellSize, gridW, r * cellSize);
-    for (let c = 0; c <= gridCols; c++) pg.line(c * cellSize, 0, c * cellSize, gridH);
+  // Stop body flex-centering + overflow clipping during capture
+  document.documentElement.style.width = `${resWidth}px`;
+  document.documentElement.style.height = `${resHeight}px`;
+
+  document.body.style.margin = '0';
+  document.body.style.padding = '0';
+  document.body.style.display = 'block';
+  document.body.style.justifyContent = 'unset';
+  document.body.style.alignItems = 'unset';
+  document.body.style.overflow = 'visible';
+  document.body.style.backgroundColor = bgColor;
+
+  // Ensure signature color is correct before capture
+  applySignatureColorForBg();
+
+  // Export layout knobs (pixels)
+  const padX = Math.round(resWidth * 0.06);
+  const padTop = Math.round(resHeight * 0.06);
+  const padBottom = Math.round(resHeight * 0.10); // extra breathing room at bottom
+
+  // Pin wrapper to top-left and make it EXACT output size
+  wrapper.style.position = 'fixed';
+  wrapper.style.left = '0';
+  wrapper.style.top = '0';
+  wrapper.style.transform = 'none';
+  wrapper.style.width = `${resWidth}px`;
+  wrapper.style.height = `${resHeight}px`;
+  wrapper.style.padding = `${padTop}px ${padX}px ${padBottom}px ${padX}px`;
+  wrapper.style.display = 'flex';
+  wrapper.style.flexDirection = 'column';
+  wrapper.style.alignItems = 'center';
+  wrapper.style.justifyContent = 'flex-start';
+  wrapper.style.boxSizing = 'border-box';
+
+  // Canvas container fills the remaining area; signature will be positioned by syncSignatureLayout()
+  const availableW = resWidth - padX * 2;
+
+  // Give canvas container a generous height; signature spacing is computed later
+  const availableH = resHeight - padTop - padBottom;
+  canvasContainer.style.width = `${availableW}px`;
+  canvasContainer.style.height = `${Math.max(100, Math.round(availableH * 0.78))}px`;
+  canvasContainer.style.display = 'flex';
+  canvasContainer.style.alignItems = 'center';
+  canvasContainer.style.justifyContent = 'center';
+
+  // Resize p5 canvas to fit inside canvasContainer while preserving aspect
+  const targetAspect =
+    aspectMode === 'landscape' ? 3 / 2 :
+    aspectMode === 'portrait' ? 2 / 3 :
+    1;
+
+  let cw = availableW;
+  let ch = Math.round(cw / targetAspect);
+
+  const maxCanvasH = Math.max(100, Math.round(availableH * 0.78));
+  if (ch > maxCanvasH) {
+    ch = maxCanvasH;
+    cw = Math.round(ch * targetAspect);
   }
 
-  pg.pop();
+  resizeCanvas(cw, ch);
+  redraw();
 
-  pg.save(`geogrid-${generateHash()}-${resWidth}x${resHeight}.png`);
-  pg.remove();
+  // After canvas is resized and signature text is updated, align + position signature
+  syncSignatureLayout();
+  applySignatureColorForBg();
+
+  // Let layout settle
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+  // Capture wrapper
+  const captureCanvas = await html2canvas(wrapper, {
+    backgroundColor: bgColor,
+    scale: 1,
+    useCORS: true,
+    allowTaint: true,
+    logging: false,
+  });
+
+  // Normalize to exact requested size (safety)
+  const out = document.createElement('canvas');
+  out.width = resWidth;
+  out.height = resHeight;
+  const ctx = out.getContext('2d');
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, resWidth, resHeight);
+  ctx.drawImage(captureCanvas, 0, 0, resWidth, resHeight);
+
+  // Download
+  const a = document.createElement('a');
+  a.download = `geogrid-${generateHash()}-${resWidth}x${resHeight}.png`;
+  a.href = out.toDataURL('image/png');
+  a.click();
+
+  // Restore everything
+  if (prevWrapperStyle) wrapper.setAttribute('style', prevWrapperStyle);
+  else wrapper.removeAttribute('style');
+
+  if (prevCanvasContainerStyle) canvasContainer.setAttribute('style', prevCanvasContainerStyle);
+  else canvasContainer.removeAttribute('style');
+
+  if (prevSignatureStyle) signature.setAttribute('style', prevSignatureStyle);
+  else signature.removeAttribute('style');
+
+  if (prevBodyStyle) document.body.setAttribute('style', prevBodyStyle);
+  else document.body.removeAttribute('style');
+
+  if (prevHtmlStyle) document.documentElement.setAttribute('style', prevHtmlStyle);
+  else document.documentElement.removeAttribute('style');
+
+  // Restore normal canvas sizing and redraw
+  resizeToAspect();
+  redraw();
 }
 
 // ---------- Utils ----------
