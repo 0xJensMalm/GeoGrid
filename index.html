@@ -20,11 +20,20 @@
   </div>
 
   <div id="controls">
-    <h1>GeoGrid</h1>
+    <div class="controls-header">
+      <h1>GeoGrid</h1>
+    </div>
+
+    <button id="generate">Generate New (N)</button>
 
     <div class="control-group">
       <label>Background</label>
       <div class="bg-swatches" id="bgSwatches"></div>
+    </div>
+
+    <div class="control-group">
+      <label>Font Color</label>
+      <div class="sig-swatches" id="sigSwatches"></div>
     </div>
 
     <div class="control-group">
@@ -60,7 +69,7 @@
       <label>Seed Hash</label>
       <div class="hash-input-wrapper">
         <input type="text" id="seedHash" readonly>
-        <button id="copyHash" title="Copy hash">⎘</button>
+        <button id="copyHash" title="Copy hash (C)">⎘</button>
       </div>
     </div>
 
@@ -72,10 +81,8 @@
       </div>
     </div>
 
-    <button id="generate">Generate New ↻</button>
-
     <div id="save-section">
-      <button id="save">Download</button>
+      <button id="save">Download (S)</button>
       <div id="save-options" class="hidden">
         <label>Resolution (width × height)</label>
         <div class="resolution-wrapper">
@@ -87,11 +94,45 @@
         </div>
       </div>
     </div>
+
+    <div class="favorites-section">
+      <label>Favorites</label>
+      <div class="favorites-actions">
+        <button id="favoriteBtn" class="icon-btn" title="Add to favorites (F)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </button>
+        <button id="galleryBtn" class="icon-btn" title="Open gallery (G)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </button>
+        <button id="cycleBtn" class="icon-btn" title="Random favorite (R)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"/>
+            <polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="keyboard-hints">
+      <span>N</span> new
+      <span>S</span> save
+      <span>F</span> favorite
+      <span>G</span> gallery
+      <span>R</span> random
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <script src="themes.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="sketch.js"></script>
+  <script type="module" src="sketch.js"></script>
 </body>
 </html>
