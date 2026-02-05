@@ -35,6 +35,7 @@ export function initControls({ generate, redraw, resize, exportFn }) {
   setupSaveSection();
   setupHashControls();
   setupKeyboardShortcuts();
+  setupToggleControls();
   
   refreshThemeUI();
 }
@@ -202,11 +203,12 @@ function setupHashControls() {
   const loadInput = document.getElementById('loadHash');
   
   copyBtn?.addEventListener('click', () => {
-    const hashInput = document.getElementById('seedHash');
-    navigator.clipboard.writeText(hashInput?.value || '').then(() => {
+    const hashEl = document.getElementById('seedHash');
+    navigator.clipboard.writeText(hashEl?.textContent || '').then(() => {
       if (copyBtn) {
-        copyBtn.textContent = '✓';
-        setTimeout(() => { copyBtn.textContent = '⎘'; }, 1500);
+        const originalHTML = copyBtn.innerHTML;
+        copyBtn.innerHTML = '✓';
+        setTimeout(() => { copyBtn.innerHTML = originalHTML; }, 1500);
       }
     });
   });
@@ -247,8 +249,8 @@ function setupKeyboardShortcuts() {
       document.getElementById('save')?.click();
     }
     if (e.key === 'c' || e.key === 'C') {
-      const hashInput = document.getElementById('seedHash');
-      navigator.clipboard.writeText(hashInput?.value || '');
+      const hashEl = document.getElementById('seedHash');
+      navigator.clipboard.writeText(hashEl?.textContent || '');
     }
     if (e.key === 'f' || e.key === 'F') {
       document.getElementById('favoriteBtn')?.click();
@@ -259,6 +261,15 @@ function setupKeyboardShortcuts() {
     if (e.key === 'r' || e.key === 'R') {
       document.getElementById('cycleBtn')?.click();
     }
+  });
+}
+
+function setupToggleControls() {
+  const toggleBtn = document.getElementById('toggleControls');
+  const controls = document.getElementById('controls');
+  
+  toggleBtn?.addEventListener('click', () => {
+    controls?.classList.toggle('collapsed');
   });
 }
 
@@ -280,8 +291,8 @@ export function syncControlsToState() {
 }
 
 export function updateHashDisplay() {
-  const hashInput = document.getElementById('seedHash');
-  if (hashInput) hashInput.value = generateHash();
+  const hashEl = document.getElementById('seedHash');
+  if (hashEl) hashEl.textContent = generateHash();
 }
 
 export function refreshThemeUI() {

@@ -96,9 +96,18 @@ body {
 }
 
 .controls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 12px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--ui-border);
+}
+
+#controls.collapsed .controls-header {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 #controls h1 {
@@ -107,6 +116,43 @@ body {
   color: var(--ui-accent);
   letter-spacing: 0.2em;
   text-transform: uppercase;
+}
+
+.toggle-btn {
+  width: 28px;
+  height: 28px;
+  padding: 5px;
+  background: transparent;
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text-dim);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.toggle-btn:hover {
+  background: var(--ui-bg-hover);
+  border-color: var(--ui-border-strong);
+  color: var(--ui-text);
+}
+
+.toggle-btn svg {
+  width: 100%;
+  height: 100%;
+}
+
+#controls.collapsed .toggle-btn {
+  transform: rotate(60deg);
+}
+
+/* Controls body - collapsible content */
+.controls-body {
+  display: flex;
+  flex-direction: column;
+}
+
+#controls.collapsed .controls-body {
+  display: none;
 }
 
 .icon-btn {
@@ -278,49 +324,6 @@ button#generate:hover {
   border-color: rgba(255, 255, 255, 0.35);
 }
 
-/* Hash input styling */
-.hash-group input[type="text"] {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
-}
-
-.hash-input-wrapper {
-  display: flex;
-  gap: 6px;
-}
-
-.hash-input-wrapper input[type="text"] {
-  flex: 1;
-  height: 36px;
-  padding: 0 10px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--ui-border);
-  color: var(--ui-text);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  outline: none;
-  transition: border-color 0.15s ease, background 0.15s ease;
-}
-
-.hash-input-wrapper input[type="text"]:focus {
-  border-color: var(--ui-border-strong);
-  background: var(--ui-bg-hover);
-}
-
-.hash-input-wrapper input[type="text"]::placeholder {
-  color: rgba(255, 255, 255, 0.28);
-}
-
-.hash-input-wrapper button {
-  width: 36px;
-  min-width: 36px;
-  height: 36px;
-  margin-top: 0;
-  padding: 0;
-  font-size: 1rem;
-}
-
 /* Save section */
 #save-section {
   margin-top: 8px;
@@ -478,60 +481,104 @@ button#generate:hover {
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
 }
 
-/* Favorites section */
-.favorites-section {
+/* Bottom section - Favorites, Import, Seed */
+.bottom-section {
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid var(--ui-border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.favorites-section label {
-  display: block;
-  font-size: 0.7rem;
+.section-label {
+  font-size: 0.6rem;
   color: var(--ui-text-dim);
-  margin-bottom: 10px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
+  white-space: nowrap;
+  width: 68px;
+  min-width: 68px;
+  flex-shrink: 0;
+}
+
+.favorites-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .favorites-actions {
   display: flex;
-  gap: 6px;
+  gap: 4px;
+  flex: 1;
 }
 
 .favorites-actions .icon-btn {
   flex: 1;
-  height: 36px;
+  height: 32px;
   width: auto;
 }
 
-/* Keyboard hints */
-.keyboard-hints {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid var(--ui-border);
-  font-size: 0.65rem;
-  color: var(--ui-text-dim);
-  letter-spacing: 0.04em;
-  line-height: 1.8;
+/* Seed input rows - shared styles */
+.import-row,
+.seed-row {
+  display: grid;
+  grid-template-columns: 68px 1fr 26px;
+  align-items: center;
+  gap: 6px;
 }
 
-.keyboard-hints span {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  line-height: 18px;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.08);
+/* Input field styles */
+.import-row input[type="text"],
+.seed-hash {
+  width: 100%;
+  height: 26px;
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--ui-border);
-  margin-right: 4px;
-  margin-left: 8px;
-  font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--ui-text-dim);
+  outline: none;
+}
+
+.import-row input[type="text"] {
   color: var(--ui-text);
 }
 
-.keyboard-hints span:first-child {
-  margin-left: 0;
+.import-row input[type="text"]:focus {
+  border-color: var(--ui-border-strong);
+  background: var(--ui-bg-hover);
+}
+
+.import-row input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.seed-hash {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Row action buttons */
+.import-row .icon-btn.small,
+.seed-row .icon-btn.small {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+}
+
+.import-row .icon-btn.small {
+  font-size: 0.8rem;
+}
+
+.seed-row .icon-btn.small svg {
+  width: 12px;
+  height: 12px;
 }
 
 /* Gallery Modal */
@@ -745,16 +792,32 @@ button#generate:hover {
     right: 0;
     left: 0;
     width: auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
     padding: 14px;
+  }
+
+  #controls.collapsed {
+    padding: 10px 14px;
   }
 
   .controls-header {
     width: 100%;
-    margin-bottom: 8px;
-    padding-bottom: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  #controls.collapsed .controls-header {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .controls-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  #controls.collapsed .controls-body {
+    display: none;
   }
 
   .control-group {
@@ -763,12 +826,22 @@ button#generate:hover {
     margin-bottom: 0;
   }
 
-  button {
+  .controls-body > button {
     flex: 1;
     min-width: 100px;
   }
 
-  .keyboard-hints {
+  .toggle-btn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+  }
+
+  .bottom-section {
+    width: 100%;
+  }
+
+  #save-section {
     width: 100%;
   }
 

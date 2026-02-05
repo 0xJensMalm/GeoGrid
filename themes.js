@@ -35,6 +35,21 @@ window.THEME_LIST = [
       name: 'francophile',
       colors: ['#0d1b2a', '#1b263b', '#415a77', '#E63946', '#e0e1dd'],
     },
+    {
+      id: 'coolWaters',
+      name: 'cool waters',
+      colors: ['#22577a', '#38a3a5', '#57cc99', '#80ed99', '#c7f9cc'],
+    },
+    {
+      id: 'warmSomething',
+      name: 'warm something',
+      colors: ['#fb6107', '#f3de2c', '#7cb518', '#5c8001', '#fbb02d'],
+    },
+    {
+      id: 'monochrome',
+      name: 'monochrome',
+      colors: ['#f8f9fa', '#dee2e6', '#adb5bd', '#495057', '#212529'],
+    },
 
   ];
   

@@ -22,9 +22,16 @@
   <div id="controls">
     <div class="controls-header">
       <h1>GeoGrid</h1>
+      <button id="toggleControls" class="toggle-btn" title="Toggle controls">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
     </div>
 
-    <button id="generate">Generate New (N)</button>
+    <div class="controls-body">
+      <button id="generate">Generate New</button>
 
     <div class="control-group">
       <label>Background</label>
@@ -65,24 +72,8 @@
       <label for="showGrid">Show Grid Lines</label>
     </div>
 
-    <div class="control-group hash-group">
-      <label>Seed Hash</label>
-      <div class="hash-input-wrapper">
-        <input type="text" id="seedHash" readonly>
-        <button id="copyHash" title="Copy hash (C)">⎘</button>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label for="loadHash">Load from Hash</label>
-      <div class="hash-input-wrapper">
-        <input type="text" id="loadHash" placeholder="Paste hash here...">
-        <button id="loadBtn" title="Load">→</button>
-      </div>
-    </div>
-
     <div id="save-section">
-      <button id="save">Download (S)</button>
+      <button id="save">Download</button>
       <div id="save-options" class="hidden">
         <label>Resolution (width × height)</label>
         <div class="resolution-wrapper">
@@ -95,38 +86,50 @@
       </div>
     </div>
 
-    <div class="favorites-section">
-      <label>Favorites</label>
-      <div class="favorites-actions">
-        <button id="favoriteBtn" class="icon-btn" title="Add to favorites (F)">
+    <div class="bottom-section">
+      <div class="favorites-row">
+        <span class="section-label">Favorites</span>
+        <div class="favorites-actions">
+          <button id="favoriteBtn" class="icon-btn" title="Add to favorites">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </button>
+          <button id="galleryBtn" class="icon-btn" title="Open gallery">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </button>
+          <button id="cycleBtn" class="icon-btn" title="Random favorite">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"/>
+              <polyline points="1 20 1 14 7 14"/>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="import-row">
+        <span class="section-label">Import Seed</span>
+        <input type="text" id="loadHash" placeholder="Paste seed...">
+        <button id="loadBtn" class="icon-btn small" title="Import">→</button>
+      </div>
+
+      <div class="seed-row">
+        <span class="section-label">Current Seed</span>
+        <span class="seed-hash" id="seedHash"></span>
+        <button id="copyHash" class="icon-btn small" title="Copy seed">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-          </svg>
-        </button>
-        <button id="galleryBtn" class="icon-btn" title="Open gallery (G)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7"/>
-            <rect x="14" y="3" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/>
-            <rect x="3" y="14" width="7" height="7"/>
-          </svg>
-        </button>
-        <button id="cycleBtn" class="icon-btn" title="Random favorite (R)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="23 4 23 10 17 10"/>
-            <polyline points="1 20 1 14 7 14"/>
-            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
         </button>
       </div>
     </div>
-
-    <div class="keyboard-hints">
-      <span>N</span> new
-      <span>S</span> save
-      <span>F</span> favorite
-      <span>G</span> gallery
-      <span>R</span> random
     </div>
   </div>
 
