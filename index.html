@@ -44,17 +44,33 @@
     </div>
 
     <div class="control-group">
-      <label for="aspect">Aspect Ratio</label>
-      <select id="aspect">
-        <option value="square">Square (1:1)</option>
-        <option value="landscape">Landscape (3:2)</option>
-        <option value="portrait">Portrait (2:3)</option>
-      </select>
+      <label>Aspect Ratio</label>
+      <div class="aspect-buttons">
+        <button id="aspectSquare" class="aspect-btn active" title="Square (1:1)">1:1</button>
+        <button id="aspectLandscape" class="aspect-btn" title="Landscape (3:2)">3:2</button>
+        <button id="aspectPortrait" class="aspect-btn" title="Portrait (2:3)">2:3</button>
+      </div>
     </div>
 
     <div class="control-group">
       <label for="theme">Color Theme</label>
-      <select id="theme"></select>
+      <div class="theme-row">
+        <select id="theme"></select>
+        <button id="nextTheme" class="icon-btn small" title="Next theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+        <button id="randomTheme" class="icon-btn small" title="Random theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 3 21 3 21 8"/>
+            <line x1="4" y1="20" x2="21" y2="3"/>
+            <polyline points="21 16 21 21 16 21"/>
+            <line x1="15" y1="15" x2="21" y2="21"/>
+            <line x1="4" y1="4" x2="9" y2="9"/>
+          </svg>
+        </button>
+      </div>
     </div>
 
     <div class="control-group">
@@ -67,22 +83,19 @@
       <input type="range" id="complexity" min="1" max="5" value="2">
     </div>
 
-    <div class="control-group checkbox-group">
-      <input type="checkbox" id="showGrid" checked>
-      <label for="showGrid">Show Grid Lines</label>
-    </div>
-
-    <div id="save-section">
-      <button id="save">Download</button>
-      <div id="save-options" class="hidden">
-        <label>Resolution (width × height)</label>
-        <div class="resolution-wrapper">
-          <input type="number" id="resWidth" value="2048" min="256" max="8192" step="1" placeholder="Width">
-          <span class="res-separator">×</span>
-          <input type="number" id="resHeight" value="2048" min="256" max="8192" step="1" placeholder="Height">
-          <button id="confirmSave" title="Export">✓</button>
-          <button id="cancelSave" title="Cancel">✕</button>
-        </div>
+    <div class="control-group">
+      <label>Pattern Mode</label>
+      <div class="mode-buttons">
+        <button id="modeTriangle" class="mode-btn active" title="Triangle mode">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="12,4 22,20 2,20"/>
+          </svg>
+        </button>
+        <button id="modeCircle" class="mode-btn" title="Circle mode">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+        </button>
       </div>
     </div>
 
@@ -128,6 +141,20 @@
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
         </button>
+      </div>
+
+      <div id="save-section">
+        <button id="save">Download</button>
+        <div id="save-options" class="hidden">
+          <label>Resolution (width × height)</label>
+          <div class="resolution-wrapper">
+            <input type="number" id="resWidth" value="2048" min="256" max="8192" step="1" placeholder="Width">
+            <span class="res-separator">×</span>
+            <input type="number" id="resHeight" value="2048" min="256" max="8192" step="1" placeholder="Height">
+            <button id="confirmSave" title="Export">✓</button>
+            <button id="cancelSave" title="Cancel">✕</button>
+          </div>
+        </div>
       </div>
     </div>
     </div>

@@ -28,9 +28,9 @@ export function initControls({ generate, redraw, resize, exportFn }) {
   
   setupThemeSelect();
   setupGridSlider();
-  setupAspectSelect();
+  setupAspectButtons();
   setupComplexitySlider();
-  setupShowGridCheckbox();
+  setupModeButtons();
   setupGenerateButton();
   setupSaveSection();
   setupHashControls();
@@ -42,6 +42,9 @@ export function initControls({ generate, redraw, resize, exportFn }) {
 
 function setupThemeSelect() {
   const themeSelect = document.getElementById('theme');
+  const nextThemeBtn = document.getElementById('nextTheme');
+  const randomThemeBtn = document.getElementById('randomTheme');
+  
   if (!themeSelect) return;
   
   themeSelect.innerHTML = '';
@@ -53,8 +56,9 @@ function setupThemeSelect() {
   }
   themeSelect.value = state.themeId;
   
-  themeSelect.addEventListener('change', (e) => {
-    state.themeId = e.target.value;
+  function applyTheme(themeId) {
+    state.themeId = themeId;
+    themeSelect.value = themeId;
     
     // If current bgColor isn't in new palette, fall back to black
     const bgPalette = getBackgroundPalette();
@@ -74,6 +78,23 @@ function setupThemeSelect() {
     syncHashToUrl();
     updateFavoriteButton();
     onRedraw?.();
+  }
+  
+  themeSelect.addEventListener('change', (e) => {
+    applyTheme(e.target.value);
+  });
+  
+  // Next theme button
+  nextThemeBtn?.addEventListener('click', () => {
+    const currentIdx = window.THEME_LIST.findIndex(t => t.id === state.themeId);
+    const nextIdx = (currentIdx + 1) % window.THEME_LIST.length;
+    applyTheme(window.THEME_LIST[nextIdx].id);
+  });
+  
+  // Random theme button
+  randomThemeBtn?.addEventListener('click', () => {
+    const randomIdx = Math.floor(Math.random() * window.THEME_LIST.length);
+    applyTheme(window.THEME_LIST[randomIdx].id);
   });
 }
 
@@ -93,21 +114,35 @@ function setupGridSlider() {
   });
 }
 
-function setupAspectSelect() {
-  const aspectSelect = document.getElementById('aspect');
-  if (!aspectSelect) return;
+function setupAspectButtons() {
+  const squareBtn = document.getElementById('aspectSquare');
+  const landscapeBtn = document.getElementById('aspectLandscape');
+  const portraitBtn = document.getElementById('aspectPortrait');
   
-  aspectSelect.value = state.aspectMode;
+  function updateAspectUI() {
+    squareBtn?.classList.toggle('active', state.aspectMode === 'square');
+    landscapeBtn?.classList.toggle('active', state.aspectMode === 'landscape');
+    portraitBtn?.classList.toggle('active', state.aspectMode === 'portrait');
+  }
   
-  aspectSelect.addEventListener('change', (e) => {
-    state.aspectMode = e.target.value;
+  function setAspect(mode) {
+    if (state.aspectMode === mode) return;
+    state.aspectMode = mode;
+    updateAspectUI();
     recalcGridDims();
     onResize?.();
     refreshThemeUI();
     syncHashToUrl();
     updateFavoriteButton();
     onRedraw?.();
-  });
+  }
+  
+  squareBtn?.addEventListener('click', () => setAspect('square'));
+  landscapeBtn?.addEventListener('click', () => setAspect('landscape'));
+  portraitBtn?.addEventListener('click', () => setAspect('portrait'));
+  
+  // Initial UI state
+  updateAspectUI();
 }
 
 function setupComplexitySlider() {
@@ -128,16 +163,37 @@ function setupComplexitySlider() {
   });
 }
 
-function setupShowGridCheckbox() {
-  const gridCheckbox = document.getElementById('showGrid');
-  if (!gridCheckbox) return;
+function setupModeButtons() {
+  const triangleBtn = document.getElementById('modeTriangle');
+  const circleBtn = document.getElementById('modeCircle');
   
-  gridCheckbox.checked = state.showGrid;
+  function updateModeUI() {
+    triangleBtn?.classList.toggle('active', state.mode === 'triangle');
+    circleBtn?.classList.toggle('active', state.mode === 'circle');
+  }
   
-  gridCheckbox.addEventListener('change', (e) => {
-    state.showGrid = e.target.checked;
+  triangleBtn?.addEventListener('click', () => {
+    if (state.mode === 'triangle') return;
+    state.mode = 'triangle';
+    updateModeUI();
+    onGenerate?.();
+    syncHashToUrl();
+    updateFavoriteButton();
     onRedraw?.();
   });
+  
+  circleBtn?.addEventListener('click', () => {
+    if (state.mode === 'circle') return;
+    state.mode = 'circle';
+    updateModeUI();
+    onGenerate?.();
+    syncHashToUrl();
+    updateFavoriteButton();
+    onRedraw?.();
+  });
+  
+  // Initial UI state
+  updateModeUI();
 }
 
 function setupGenerateButton() {
@@ -278,16 +334,28 @@ export function syncControlsToState() {
   const themeSelect = document.getElementById('theme');
   const complexitySlider = document.getElementById('complexity');
   const complexityValue = document.getElementById('complexityValue');
-  const aspectSelect = document.getElementById('aspect');
   const gridSlider = document.getElementById('gridSize');
   const gridValue = document.getElementById('gridSizeValue');
+  const triangleBtn = document.getElementById('modeTriangle');
+  const circleBtn = document.getElementById('modeCircle');
+  const squareBtn = document.getElementById('aspectSquare');
+  const landscapeBtn = document.getElementById('aspectLandscape');
+  const portraitBtn = document.getElementById('aspectPortrait');
   
   if (themeSelect) themeSelect.value = state.themeId;
   if (complexitySlider) complexitySlider.value = state.complexity;
   if (complexityValue) complexityValue.textContent = state.complexity;
-  if (aspectSelect) aspectSelect.value = state.aspectMode;
   if (gridSlider) gridSlider.value = state.gridSize;
   if (gridValue) gridValue.textContent = state.gridSize;
+  
+  // Mode buttons
+  triangleBtn?.classList.toggle('active', state.mode === 'triangle');
+  circleBtn?.classList.toggle('active', state.mode === 'circle');
+  
+  // Aspect buttons
+  squareBtn?.classList.toggle('active', state.aspectMode === 'square');
+  landscapeBtn?.classList.toggle('active', state.aspectMode === 'landscape');
+  portraitBtn?.classList.toggle('active', state.aspectMode === 'portrait');
 }
 
 export function updateHashDisplay() {

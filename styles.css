@@ -155,6 +155,91 @@ body {
   display: none;
 }
 
+/* Mode buttons */
+.mode-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.mode-btn {
+  flex: 1;
+  height: 36px;
+  padding: 8px;
+  margin-top: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text-dim);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mode-btn:hover {
+  background: var(--ui-bg-hover);
+  border-color: var(--ui-border-strong);
+  color: var(--ui-text);
+}
+
+.mode-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--ui-border-strong);
+  color: var(--ui-text);
+}
+
+.mode-btn svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Aspect ratio buttons */
+.aspect-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.aspect-btn {
+  flex: 1;
+  height: 32px;
+  padding: 0;
+  margin-top: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.aspect-btn:hover {
+  background: var(--ui-bg-hover);
+  border-color: var(--ui-border-strong);
+  color: var(--ui-text);
+}
+
+.aspect-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--ui-border-strong);
+  color: var(--ui-text);
+}
+
+/* Theme row with dropdown and buttons */
+.theme-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.theme-row select {
+  flex: 1;
+  min-width: 0;
+}
+
+.theme-row .icon-btn.small {
+  flex-shrink: 0;
+}
+
 .icon-btn {
   width: 32px;
   height: 32px;
@@ -264,26 +349,6 @@ select:focus {
 select option {
   background: #101018;
   color: #fff;
-}
-
-/* Checkbox */
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.checkbox-group label {
-  margin-bottom: 0;
-  cursor: pointer;
-  text-transform: none;
-}
-
-input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: #fff;
-  cursor: pointer;
 }
 
 /* Buttons */

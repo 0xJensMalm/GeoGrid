@@ -13,7 +13,7 @@ export const state = {
   bgColor: '#000000',
   sigColor: null, // null = auto (light on black, black on others)
   gridSize: 10,
-  showGrid: true,
+  mode: 'triangle', // 'triangle' or 'circle'
   
   // Derived values (computed from above)
   gridCols: 10,
@@ -61,7 +61,10 @@ export function generateHash() {
   const sigIdx = getSigColorIndex();
   const sigPart = sigIdx < 0 ? 'a' : sigIdx.toString(36);
   
-  return `${state.seed.toString(36)}-${themeIndex.toString(36)}-${state.complexity.toString(36)}-${aspectIndex.toString(36)}-${bgIdx.toString(36)}-${sigPart}`;
+  // mode: 't' for triangle, 'c' for circle
+  const modePart = state.mode === 'circle' ? 'c' : 't';
+  
+  return `${state.seed.toString(36)}-${themeIndex.toString(36)}-${state.complexity.toString(36)}-${aspectIndex.toString(36)}-${bgIdx.toString(36)}-${sigPart}-${modePart}`;
 }
 
 export function parseHash(hash) {
@@ -99,6 +102,14 @@ export function parseHash(hash) {
       }
     } else {
       state.sigColor = null; // auto for old hashes
+    }
+    
+    // Parse mode (7th part, optional)
+    if (parts.length >= 7) {
+      const modePart = parts[6];
+      state.mode = modePart === 'c' ? 'circle' : 'triangle';
+    } else {
+      state.mode = 'triangle'; // default for old hashes
     }
     
     return true;

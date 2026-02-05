@@ -22,6 +22,7 @@ import {
 
 import { initGallery, updateFavoriteButton } from './gallery.js';
 import { initExport, exportHighRes } from './export.js';
+import { generatePatternForMode, drawCellForMode } from './modes.js';
 
 // p5.js instance mode would be cleaner, but keeping global mode for compatibility
 window.setup = async function() {
@@ -105,22 +106,6 @@ window.draw = function() {
     }
   }
   
-  // Optional grid overlay
-  if (state.showGrid && Math.max(state.gridCols, state.gridRows) <= 40) {
-    stroke(255, 15);
-    strokeWeight(0.5);
-    noFill();
-    
-    for (let r = 0; r <= state.gridRows; r++) {
-      const y = offsetY + r * cellSize;
-      line(offsetX, y, offsetX + gridW, y);
-    }
-    for (let c = 0; c <= state.gridCols; c++) {
-      const x = offsetX + c * cellSize;
-      line(x, offsetY, x, offsetY + gridH);
-    }
-  }
-  
   updateSignature();
   syncSignatureLayout();
 };
@@ -139,51 +124,36 @@ function handleStateChange() {
 function generatePattern() {
   randomSeed(state.seed);
   
-  const gridRes = state.complexity + 1;
-  
-  state.pattern = {
-    gridRes,
-    triangles: [],
-  };
-  
-  for (let row = 0; row < gridRes - 1; row++) {
-    for (let col = 0; col < gridRes - 1; col++) {
-      const x0 = col / (gridRes - 1);
-      const y0 = row / (gridRes - 1);
-      const x1 = (col + 1) / (gridRes - 1);
-      const y1 = (row + 1) / (gridRes - 1);
-      
-      const tl = { x: x0, y: y0 };
-      const tr = { x: x1, y: y0 };
-      const bl = { x: x0, y: y1 };
-      const br = { x: x1, y: y1 };
-      
-      const diagDirection = random() > 0.5;
-      
-      const colorIdx1 = floor(random(8));
-      const colorIdx2 = floor(random(8));
-      
-      if (diagDirection) {
-        state.pattern.triangles.push({ vertices: [tl, tr, br], colorIndex: colorIdx1 });
-        state.pattern.triangles.push({ vertices: [tl, br, bl], colorIndex: colorIdx2 });
-      } else {
-        state.pattern.triangles.push({ vertices: [tl, tr, bl], colorIndex: colorIdx1 });
-        state.pattern.triangles.push({ vertices: [tr, br, bl], colorIndex: colorIdx2 });
-      }
-    }
-  }
+  // Generate pattern using the mode-specific function
+  state.pattern = generatePatternForMode(
+    state.mode,
+    state.complexity,
+    () => randomSeed(state.seed), // seedFn (not used, already seeded above)
+    () => random(),               // randomFn
+    (n) => floor(n)               // floorFn
+  );
   
   updateHashDisplay();
 }
 
 function drawCell(size, colors) {
-  noStroke();
-  for (const tri of state.pattern.triangles) {
-    fill(colors[tri.colorIndex % colors.length]);
-    beginShape();
-    for (const v of tri.vertices) vertex(v.x * size, v.y * size);
-    endShape(CLOSE);
-  }
+  // Create a p5 instance-like object with the global functions
+  const p5 = {
+    noStroke,
+    fill,
+    beginShape,
+    endShape,
+    vertex,
+    rect,
+    arc,
+    CLOSE,
+    PIE,
+    HALF_PI,
+    PI,
+    TWO_PI,
+  };
+  
+  drawCellForMode(state.pattern, size, colors, p5);
 }
 
 // Canvas sizing
